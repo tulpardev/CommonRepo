@@ -9,7 +9,8 @@ const url = (endPoint) => {
 export const httpPost = (data, endPoint) => {
   return fetch(url(endPoint), {
     method: "POST",
-    //headers: { "Content-Type": "application/json", Accept: "application/json" },
+    //headers: { "Content-Type": "application/json"},
+    //mode: 'no-cors',
     body: JSON.stringify(data),
   })
     .then(handleResponse)
@@ -21,10 +22,14 @@ export const httpGet = (endPoint) => {
   // myHeaders.append('Content-Type', 'application/json');
   // myHeaders.append('Authorization', '');
 
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  //headers.append("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9zcGlyIiwiZXhwIjoxNTg2Mzc0MzE5fQ.9SHcr-Wuv4Ok6AEg0gjfvLIRNslitfPk-CVw6CtUnTU");
+
   return fetch(url(endPoint), {
-    method: "GET",
-    headers: authHeader(),
-    mode: 'no-cors'
+    method: 'GET',
+    headers: headers,
+    mode: 'no-cors',
     //{
     //   'Content-Type': 'application/json',
     //   Accept: 'application/json',
@@ -50,6 +55,7 @@ export const httpGet = (endPoint) => {
 // }
 
 function handleResponse(response) {
+  console.log(response)
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
     console.log(data)

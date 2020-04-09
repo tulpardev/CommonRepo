@@ -42,6 +42,8 @@ const UserLogin = () => {
   function handleSave(event) {
     event.preventDefault();
     dispatch(userLoginActions.postUser(userData));
+    let user = localStorage.getItem("userToken");
+    console.log(user)
     //history.push("/");
     //alert(userData.name +" eklendi");
   }
