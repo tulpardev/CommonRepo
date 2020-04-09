@@ -22,13 +22,13 @@ export function saveCustomer(customer) {
 export function getCustomers(){
   return function(dispatch) {
     return getCustomersApi()
-      .then(result => dispatch(getCustomerSuccess(result.Users)))
+      .then(result =>dispatch(getCustomerSuccess(result.Users)))
       .catch(error => {
         throw error;
       });
   }
 }
-
+//
 export function saveCustomerApi(customer) {
   let endPoint = "store"
   return httpHelper.httpPost(customer,endPoint)
