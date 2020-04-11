@@ -1,5 +1,4 @@
 export default {
-    //apiVersion: "v1",
-    apiUrl: "http://localhost:3001"
-  };
-  
+  //apiVersion: "v1",
+  apiUrl: "http://localhost:3001",
+};

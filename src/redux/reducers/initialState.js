@@ -1,6 +1,5 @@
 export default {
-    customer: [],
-    savedProduct: {},
-    currentUser:{}
-  };
-  
+  customer: [],
+  savedProduct: {},
+  currentUser: {},
+};
