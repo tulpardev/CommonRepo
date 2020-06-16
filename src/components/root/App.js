@@ -23,7 +23,7 @@ function App() {
   return (
     <div
       className="jumbotron jumbotron-fluid"
-      style={{ background: "#86BBD8" }}
+      style={{ background: "#FDFFFC" }}
     >
       <div className="container">
         <div className="col-md-8 offset-md-2">
