@@ -31,7 +31,7 @@ const UserLogin = () => {
     setSubmitted(true);
     if (userData.name && userData.password) {
       dispatch(customerActions.loginUser(userData));
-      console.log("Giriş Başarılı");
+      console.log("merhaba");
     }
   }
 
