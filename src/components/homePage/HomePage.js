@@ -14,7 +14,7 @@ function CustomerList() {
 
   return (
     <div className="col-lg-8 offset-lg-2">
-      <h1>Histograma Hoşgeldin</h1>
+      <h1>Giriş Başarılı</h1>
       {users.loading && (
         <em style={{ color: "white" }}>Kullanıcılar yükleniyor...</em>
       )}

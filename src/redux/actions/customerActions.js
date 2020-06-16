@@ -41,13 +41,14 @@ export function currentUserSuccess(currentUser) {
 export function loginUser(user) {
   return function (dispatch) {
     dispatch(userLoginRequest({ user }));
-    return loginUserApi(user)
+    return userLoginApi(user)
       .then(
         (result) => {
-          if (result.Token) {
-            localStorage.setItem("userToken", JSON.stringify(result.Token));
-            const decodedUser = jwt_decode(result.Token);
-            dispatch(currentUserSuccess(decodedUser));
+          if (result) {
+            //console.log(result)
+            localStorage.setItem("userToken", JSON.stringify(result));
+            //const decodedUser = jwt_decode(result.Token);
+            //dispatch(currentUserSuccess(decodedUser));
             dispatch(userLoginSuccess(user));
             history.push("/");
           } else {
@@ -89,10 +90,11 @@ export function registerUser(user) {
 export function userList() {
   return function (dispatch) {
     dispatch(userListRequest());
-    return userListApi()
+    return userGetApi()
       .then(
-        (result) => dispatch(userListSuccess(result.Users)),
-        (error) => dispatch(userListFailure(error))
+        // (result) => dispatch(userListSuccess(result.Users)),
+        // (error) => dispatch(userListFailure(error))
+        console.log("Diller")
       )
       .catch((error) => {
         throw error;
@@ -105,9 +107,10 @@ export function logout() {
   return { type: actionTypes.LOGOUT };
 }
 
-export function loginUserApi(user) {
-  let endPoint = "auth/gettoken";
-  return httpHelper.httpPost(user, endPoint);
+export function userGetApi() {
+  let endPoint = "api/languages";
+  let apiKey = localStorage.getItem("userToken");
+  return httpHelper.httpGet(apiKey, endPoint);
 }
 
 export function registerUserApi(user) {
@@ -115,7 +118,7 @@ export function registerUserApi(user) {
   return httpHelper.httpPost(user, endPoint);
 }
 
-export function userListApi() {
-  let endPoint = "user/list";
-  return httpHelper.httpGet(endPoint);
+export function userLoginApi(user) {
+  let endPoint = "api/users?login";
+  return httpHelper.httpPost(user,endPoint);
 }

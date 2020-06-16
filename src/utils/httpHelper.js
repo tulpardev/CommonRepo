@@ -8,26 +8,29 @@ const url = (endPoint) => {
 };
 
 export const httpPost = (data, endPoint) => {
-  return fetch((endPoint), {
+  return fetch(endPoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json"},
-    mode: 'same-origin',
+    headers: { "Content-Type": "application/json",
+              "apiKey":"28FD5FFC-44CB-46E7-93AB-377B1EAE2D90" },
+    
+    mode: "same-origin",
     body: JSON.stringify(data),
   })
     .then(handleResponse)
     .catch(handleError);
 };
 
-export const httpGet = (endPoint) => {
+export const httpGet = (apiKey,endPoint) => {
+  //console.log(JSON.parse(apiKey))
   return fetch(endPoint, {
     method: "GET",
-    headers: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkdhbXplIiwiZXhwIjoxNTg2NjEyODM4fQ.eMldfEOBLRstyxRsZl_Z9CtijJV-esAK-vXcC1w27No"},
-    mode: "same-origin"
+    headers: { "apiKey":`${JSON.parse(apiKey)}`},
+    mode: "same-origin",
   })
-
     .then(handleResponse)
     .catch(handleError);
 };
+
 
 function handleResponse(response) {
   console.log(response);
@@ -36,7 +39,8 @@ function handleResponse(response) {
     console.log(data);
     if (!response.ok) {
       if (response.status === 401) {
-          //logout();
+        logout(); 
+        console.log("Giriş başarısız")
       }
       const error = (data && data.message) || data.error;
       return Promise.reject(error);

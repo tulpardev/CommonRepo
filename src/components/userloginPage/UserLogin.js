@@ -31,15 +31,16 @@ const UserLogin = () => {
     setSubmitted(true);
     if (userData.name && userData.password) {
       dispatch(customerActions.loginUser(userData));
+      console.log("Giriş Başarılı");
     }
   }
 
   return (
     <div className="col-lg-8 offset-lg-2">
-      <h1>Histogram</h1>
+      <h1 style={{ color: "red" }}>Yıldız Demir Çelik</h1>
       <form name="form" onSubmit={handleSave}>
         <div className="form-group">
-          <label>Kullanıcı Adı veya E-Posta</label>
+          <label>Kullanıcı Adı</label>
           <input
             type="text"
             name="name"
@@ -77,13 +78,13 @@ const UserLogin = () => {
             )}
             Giriş Yap
           </button>
-          <Link
+          {/* <Link
             to="/register"
             className="btn btn-link"
             style={{ color: "white" }}
           >
             Kayıt Ol
-          </Link>
+          </Link> */}
         </div>
       </form>
     </div>

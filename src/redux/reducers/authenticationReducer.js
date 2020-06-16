@@ -1,6 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 
-let user = JSON.parse(localStorage.getItem("user"));
+let user = JSON.parse(localStorage.getItem("userToken"));
 const initialState = user ? { loggedIn: true } : {};
 
 export default function authenticationReducer(state = initialState, action) {
