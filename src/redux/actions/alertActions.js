@@ -1,13 +1,13 @@
-import * as alertTypes from "./alertActionTypes";
+import * as alertActionTypes from "./alertActionTypes";
 
 export function success(message) {
-  return { type: alertTypes.SUCCESS, payload: message };
+  return { type: alertActionTypes.SUCCESS, payload: message };
 }
 
 export function error(message) {
-  return { type: alertTypes.ERROR, payload: message };
+  return { type: alertActionTypes.ERROR, payload: message };
 }
 
 export function clear() {
-  return { type: alertTypes.CLEAR };
+  return { type: alertActionTypes.CLEAR };
 }

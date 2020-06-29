@@ -3,19 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:53264/",
+  "secure": false,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
+    "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "alertifyjs": "^1.13.1",
     "bootstrap": "^4.4.1",
     "http-proxy-middleware": "^1.0.3",
+    "jquery": "^3.4.1",
     "jwt-decode": "^2.2.0",
+    "malihu-custom-scrollbar-plugin": "^3.1.5",
+    "popper.js": "^1.15.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-intl": "^4.7.1",
+    "react-pro-sidebar": "^0.4.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-switch": "^5.0.1",
     "reactstrap": "^8.4.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
@@ -42,6 +54,12 @@
     ]
   },
   "devDependencies": {
-    "redux-devtools-extension": "^2.13.8"
+    "@svgr/cli": "^5.4.0",
+    "redux-devtools-extension": "^2.13.8",
+    "browser-sync": "^2.26.5",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.12.0"
   }
 }

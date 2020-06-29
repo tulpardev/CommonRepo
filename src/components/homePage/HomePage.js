@@ -1,36 +1,17 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import * as customerActions from "../../redux/actions/customerActions";
-import { ListGroup, ListGroupItem } from "reactstrap";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { IntlProvider } from "react-intl";
+import Layout from "./Layout";
+import messages from "./messages";
+import "./styles/App.scss";
 
-function CustomerList() {
-  const users = useSelector((state) => state.userListReducer);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(customerActions.userList());
-  }, []);
+function HomePage() {
+  const [locale, setLocale] = useState("en");
 
   return (
-    <div className="col-lg-8 offset-lg-2">
-      <h1>Giriş Başarılı</h1>
-      {users.loading && (
-        <em style={{ color: "white" }}>Kullanıcılar yükleniyor...</em>
-      )}
-      {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-      {users.items && (
-        <ListGroup>
-          {users.items.map((user, index) => (
-            <ListGroupItem key={user.UserID}>{user.Name}</ListGroupItem>
-          ))}
-        </ListGroup>
-      )}
-      <p>
-        <Link to="/login">Logout</Link>
-      </p>
-    </div>
+    <IntlProvider locale={locale} messages={messages[locale]}>
+      <Layout setLocale={setLocale} />
+    </IntlProvider>
   );
 }
 
-export default CustomerList;
+export default HomePage;

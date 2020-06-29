@@ -50,12 +50,13 @@ export function loginUser(user) {
             //const decodedUser = jwt_decode(result.Token);
             //dispatch(currentUserSuccess(decodedUser));
             dispatch(userLoginSuccess(user));
-            history.push("/");
+            history.push("/homepage");
           } else {
             console.log("Token is not get");
           }
         },
         (error) => {
+          console.log(error)
           dispatch(userLoginFailure(error.toString()));
           dispatch(alertActions.error(error.toString()));
         }
@@ -73,7 +74,7 @@ export function registerUser(user) {
       .then(
         (result) => {
           dispatch(userRegisterSuccess(result));
-          history.push("/login");
+          history.push("/");
           dispatch(alertActions.success("Kayıt Başarılı"));
         },
         (error) => {

@@ -1,18 +1,18 @@
-import * as alertTypes from "../actions/alertActionTypes";
+import * as alertActionTypes from "../actions/alertActionTypes";
 
 export default function alertReducer(state = {}, action) {
   switch (action.type) {
-    case alertTypes.SUCCESS:
+    case alertActionTypes.SUCCESS:
       return {
         type: "alert-success",
         message: action.payload,
       };
-    case alertTypes.ERROR:
+    case alertActionTypes.ERROR:
       return {
         type: "alert-danger",
         message: action.payload,
       };
-    case alertTypes.CLEAR:
+    case alertActionTypes.CLEAR:
       return {};
     default:
       return state;
