@@ -120,6 +120,6 @@ export function registerUserApi(user) {
 }
 
 export function userLoginApi(user) {
-  let endPoint = "api/users?login";
+  let endPoint = "api/users/login";
   return httpHelper.httpPost(user,endPoint);
 }

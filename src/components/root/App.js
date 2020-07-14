@@ -26,7 +26,7 @@ function App() {
         <PrivateRoute path="/homepage" component={HomePage} />
         <Route path="/login" component={UserLogin} />
         <Route path="/register" component={Register} />
-        <Redirect from="*" to="/homepage" /> 
+        <Redirect from="*" to="/homepage" />
       </Switch>
     </Router>
   );
