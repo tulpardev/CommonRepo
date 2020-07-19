@@ -1,59 +1,52 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as producedCoilActions from "../../redux/actions/producedCoilActions";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import "../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+import "../../../node_modules/react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
+import Table from "./Table.js";
+import initialState from "../../redux/reducers/initialState.js";
 
-function ProducedCoilManagement({options}) {
+function ProducedCoilManagement() {
   const dispatch = useDispatch();
-  const producedCoils = useSelector((state) => state.producedCoilsReducer);
+  const producedCoils = useSelector(
+    (state) => state.producedCoilsReducer
+  );
+
+  const [state, setState] = useState({
+    page: 1,
+    loading: false,
+    data: producedCoils.slice(0,10),
+    sizePerPage: 10,
+  });
   useEffect(() => {
-    dispatch(producedCoilActions.getProducedCoils());
+    dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
   }, []);
 
-  const selectRowProp = {
-    mode: 'checkbox',
-    bgColor: 'pink',
-    clickToSelect: true
+  const handleTableChange = (type, { page, sizePerPage }) => {
+    dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
+    const currentIndex = (page - 1) * sizePerPage;
+    setTimeout(() => {
+      setState(() => ({
+        page,
+        loading: initialState.loadingProd,
+        data: producedCoils.slice(currentIndex, currentIndex + sizePerPage),
+        sizePerPage
+      }));
+    }, 3000);
+    initialState.loadingProd = true;
+     setState(() => ({ loading:true, data: data }));
   };
 
-   options = {
-    onPageChange:onPageChange,
-    onSizePerPageList:sizePerPageListChange,
-    // sizePerPage: 10,  // which size per page you want to locate as default
-      // pageStartIndex: 0, // where to start counting the pages
-      paginationSize: 3,  // the pagination bar size.
-      prePage: 'Prev', // Previous page button text
-      nextPage: 'Next', // Next page button text
-      firstPage: 'First', // First page button text
-      lastPage: 'Last', // Last page button text
-  };
-
-
-  function sizePerPageListChange(sizePerPage) {
-    console.log(`sayfa boyutu size: ${sizePerPage}`);
-  }
-  function onPageChange (page, sizePerPage) {
-    dispatch(producedCoilActions.getProducedCoils(sizePerPage,page));
-  //   console.log(`sayfa count: ${page}, sizePerPage: ${sizePerPage}`);
-   }
+  const { data, sizePerPage, page, loading } = state;
   return (
-
-    <BootstrapTable data={ producedCoils } striped hover condensed selectRow={ selectRowProp } pagination={ true } options={options} version='4'>
-    <TableHeaderColumn dataField="msG_COUNTER" isKey={true} >
-        Msg Counter
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="eX_COIL_ID">Produced Coil Id</TableHeaderColumn>
-        <TableHeaderColumn dataField="schedulE_ID">Scheduled Id</TableHeaderColumn>
-        <TableHeaderColumn dataField="eX_STEEL_GRADE_ID">Steel Grade</TableHeaderColumn>
-        <TableHeaderColumn dataField="width">Nominal Width</TableHeaderColumn>
-        <TableHeaderColumn dataField="thickness">Nominal Thickness</TableHeaderColumn>
-        <TableHeaderColumn dataField="calC_WEIGHT">Calculated Weight</TableHeaderColumn>
-        <TableHeaderColumn dataField="measureD_WEIGHT">Measured Weight</TableHeaderColumn>
-        <TableHeaderColumn dataField="productioN_END_DATE">Production End Date</TableHeaderColumn>
-  </BootstrapTable>
-
+    <Table
+      data={data}
+      page={page}
+      sizePerPage={sizePerPage}
+      totalSize={producedCoils.length*10 }
+      loading={false}
+      onTableChange={handleTableChange}
+    />
   );
 }
 export default ProducedCoilManagement;
-       

@@ -2,5 +2,6 @@ export default {
   customer: [],
   savedProduct: {},
   currentUser: {},
-  producedCoils:[]
+  producedCoils:[],
+  loadingProd:false
 };

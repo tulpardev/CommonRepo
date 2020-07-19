@@ -27,10 +27,10 @@ export function getProducedCoils(size, count) {
 }
 
 export function getProducedCoilsApi(size, count) {
-  let endPoint =
+  let endPoint=
     size && count
       ? `api/MSG_PROD_COIL?&size=${size}&count=${count}`
-      : "api/MSG_PROD_COIL?&size=30&count=0";
+      : "api/MSG_PROD_COIL?&size=100&count=0";
 
   console.log(endPoint);
   let apiKey = localStorage.getItem("userToken");
