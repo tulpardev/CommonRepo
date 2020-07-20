@@ -12,6 +12,6 @@ const rootReducer = combineReducers({
   registrationReducer: registrationReducer,
   userListReducer: userListReducer,
   alertReducer: alertReducer,
-  producedCoilsReducer:producedCoilsReducer
+  producedCoilsReducer:producedCoilsReducer,
 });
 export default rootReducer;

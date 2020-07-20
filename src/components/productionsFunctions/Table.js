@@ -4,7 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "../../../node_modules/react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import overlayFactory from 'react-bootstrap-table2-overlay';
-function Table({ data, page, sizePerPage, onTableChange, totalSize,loading }) {
+function Table({ data, page, sizePerPage, onTableChange, totalSize,loading,expandRow }) {
 
   const columns = [
     {
@@ -34,7 +34,7 @@ function Table({ data, page, sizePerPage, onTableChange, totalSize,loading }) {
     },
     {
       dataField: "thickness",
-      text: "Nominal Thickness",
+      text: "Nom. Thickness",
       headerAlign: "center",
     },
     {
@@ -49,7 +49,7 @@ function Table({ data, page, sizePerPage, onTableChange, totalSize,loading }) {
     },
     {
       dataField: "productioN_END_DATE",
-      text: "Production End Date",
+      text: "Prod.End Date",
       headerAlign: "center",
       align: "left",
       style: {
@@ -79,6 +79,7 @@ function Table({ data, page, sizePerPage, onTableChange, totalSize,loading }) {
         hover
         condensed
         selectRow={selectRow}
+        expandRow={ expandRow }
       />
     </div>
   );
