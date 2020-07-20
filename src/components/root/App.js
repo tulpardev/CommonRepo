@@ -8,7 +8,7 @@ import { PrivateRoute } from "../userloginPage/PrivateRoute";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
-import HomePage from "../HomePage/HomePage";
+import HomePage from "../homePage/HomePage";
 
 function App() {
   const alert = useSelector((state) => state.alertReducer);

@@ -39,12 +39,12 @@ function Table({ data, page, sizePerPage, onTableChange, totalSize,loading,expan
     },
     {
       dataField: "calC_WEIGHT",
-      text: "Calculated Weight",
+      text: "Cal. Weight",
       headerAlign: "center",
     },
     {
       dataField: "measureD_WEIGHT",
-      text: "Measured Weight",
+      text: "Meas. Weight",
       headerAlign: "center",
     },
     {
