@@ -29,7 +29,7 @@ function ProducedCoilManagement() {
   const expandRow = {
     renderer: (row) => (
       <div>
-        <Modals />
+        <Modals idInput={row.msG_COUNTER} exCoilId={row.eX_COIL_ID} />
       </div>
     ),
     showExpandColumn: true,
