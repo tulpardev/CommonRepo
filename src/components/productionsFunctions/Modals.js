@@ -1,28 +1,36 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import * as producedCoilActions from "../../redux/actions/producedCoilActions";
 
 function Modals({ idInput, exCoilId }) {
   const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  const dispatch = useDispatch();
   const [editData, setEditData] = useState({
     scheduledId: "",
     measWeight: "",
   });
 
+  const handleShow = () => {
+    dispatch(producedCoilActions.getProducedCoilsFieldsById(idInput))
+    setShow(true)
+  };
+
+  const handleClose = () => setShow(false);
+
   function handleChange(event) {
-    const { scheduledId, measWeight } = event.target;
+    const { name, value } = event.target;
     setEditData((previousData) => ({
       ...previousData,
-      [scheduledId]: measWeight,
+      [name]: value,
     }));
+    console.log(editData)
   }
 
   function handleSave(event) {
     event.preventDefault();
-    console.log("db save");
+    
+    setShow(false);
   }
 
   return (

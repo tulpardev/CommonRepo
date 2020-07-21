@@ -3,5 +3,5 @@ export default {
   savedProduct: {},
   currentUser: {},
   producedCoils:[],
-  loadingProd:false
+  producedCoilsFields:[]
 };
