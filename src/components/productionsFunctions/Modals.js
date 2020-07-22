@@ -10,6 +10,7 @@ function Modals({ idInput, exCoilId }) {
     scheduledId: "",
     measWeight: "",
   });
+  const prodCoilFields = useSelector((state) => state.producedCoilFiledsByIdReducer);
 
   const handleShow = () => {
     dispatch(producedCoilActions.getProducedCoilsFieldsById(idInput))
@@ -29,7 +30,6 @@ function Modals({ idInput, exCoilId }) {
 
   function handleSave(event) {
     event.preventDefault();
-    
     setShow(false);
   }
 
@@ -89,20 +89,31 @@ function Modals({ idInput, exCoilId }) {
                 <Form.Control
                   type="text"
                   name="measWeight"
-                  placeholder="0"
+                  placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_AVG}`}
                   value={editData.measWeight}
                   onChange={handleChange}
                 />
               </Form.Group>
-
+              
               <Form.Group controlId="exampleForm.ControlInput1">
                 <Form.Label>Scheduled Id</Form.Label>
                 <Form.Control
                   type="text"
                   name="scheduledId"
-                  placeholder="0"
+                  placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_MIN}`}
                   value={editData.scheduledId}
                   onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="exampleForm.ControlInput1">
+                <Form.Label>Up Code Weight</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="UpCodeWeight"
+                  placeholder={"0"}
+                  // value={prodCoilFields[0].upcoaT_WEIGHT_AVG}
+                  // onChange={handleChange}
                 />
               </Form.Group>
             </Form>

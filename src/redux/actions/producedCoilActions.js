@@ -37,7 +37,7 @@ export function getProducedCoilsFieldsById(id) {
       .then(
         (result) => {
           if (result) {
-            dispatch(getProducedCoilsSuccess(result));
+            dispatch(getProducedCoilsFieldsByIdSuccess(result));
           } else {
             console.log("Not get");
           }
@@ -62,7 +62,7 @@ export function getProducedCoilsApi(size, count) {
 }
 
 export function getProducedCoilsFieldsByIdApi(id) {
-  let endPoint = `api/users/MSG_PROD_COIL/prodCoilFieldsById?id=${id}`
-  return httpHelper.httpPost(id,endPoint);
+  let endPoint = `api/MSG_PROD_COIL?&Id=${id}`
+  return httpHelper.httpGet(id,endPoint);
 }
 
