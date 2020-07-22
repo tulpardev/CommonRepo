@@ -6,6 +6,7 @@ import alertReducer from "./alertReducer";
 import userListReducer from "./userListReducer";
 import producedCoilsReducer from "./producedCoilsReducer"
 import producedCoilFiledsByIdReducer from "./producedCoilFiledsByIdReducer"
+import updateProducedCoilsFieldsReducer from "./updateProducedCoilsFieldsReducer"
 
 const rootReducer = combineReducers({
   userReducer: userReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   userListReducer: userListReducer,
   alertReducer: alertReducer,
   producedCoilsReducer:producedCoilsReducer,
-  producedCoilFiledsByIdReducer:producedCoilFiledsByIdReducer
+  producedCoilFiledsByIdReducer:producedCoilFiledsByIdReducer,
+  updateProducedCoilsFieldsReducer:updateProducedCoilsFieldsReducer
 });
 export default rootReducer;

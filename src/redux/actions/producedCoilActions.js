@@ -9,6 +9,10 @@ export function getProducedCoilsFieldsByIdSuccess(id) {
   return { type: actionTypes.PRODUCED_COIL_FIELDS_BY_ID, payload: id };
 }
 
+export function updateProducedCoilsFieldsSuccess(fields) {
+  return { type: actionTypes.UPDATE_PRODUCED_COIL_FIELDS, payload: fields };
+}
+
 export function getProducedCoils(size, count) {
   return function (dispatch) {
     return getProducedCoilsApi(size, count)
@@ -53,6 +57,28 @@ export function getProducedCoilsFieldsById(id) {
 }
 
 
+export function updateProducedCoilsFields(id,fields) {
+  return function (dispatch) {
+    return updateProducedCoilsFieldsApi(id,fields)
+      .then(
+        (result) => {
+          if (result) {
+            dispatch(updateProducedCoilsFieldsSuccess(result));
+          } else {
+            console.log("Not get");
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .catch((error) => {
+        //throw error;
+      });
+  };
+}
+
+
 export function getProducedCoilsApi(size, count) {
   console.log(size,count)
   let endPoint= `api/MSG_PROD_COIL?&size=${size}&count=${count}`
@@ -63,6 +89,13 @@ export function getProducedCoilsApi(size, count) {
 
 export function getProducedCoilsFieldsByIdApi(id) {
   let endPoint = `api/MSG_PROD_COIL?&Id=${id}`
-  return httpHelper.httpGet(id,endPoint);
+  let apiKey = localStorage.getItem("userToken");
+  return httpHelper.httpGet(apiKey,endPoint);
+}
+
+export function updateProducedCoilsFieldsApi(id,fields) {
+  let endPoint = `api/MSG_PROD_COIL?&Id=${id}`
+  let apiKey = localStorage.getItem("userToken");
+  return httpHelper.httpPut(apiKey,endPoint,fields);
 }
 

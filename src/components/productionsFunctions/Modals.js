@@ -7,17 +7,29 @@ function Modals({ idInput, exCoilId }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const [editData, setEditData] = useState({
-    scheduledId: "",
-    measWeight: "",
+    UPCOAT_WEIGHT_AVG: "",
+    UPCOAT_WEIGHT_MAX: "",
+    UPCOAT_WEIGHT_MIN: "",
+    REMARK: "",
   });
-  const prodCoilFields = useSelector((state) => state.producedCoilFiledsByIdReducer);
+  const prodCoilFields = useSelector(
+    (state) => state.producedCoilFiledsByIdReducer
+  );
 
   const handleShow = () => {
-    dispatch(producedCoilActions.getProducedCoilsFieldsById(idInput))
-    setShow(true)
+    dispatch(producedCoilActions.getProducedCoilsFieldsById(idInput));
+    setShow(true);
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setEditData({
+      UPCOAT_WEIGHT_AVG: "",
+      UPCOAT_WEIGHT_MAX: "",
+      UPCOAT_WEIGHT_MIN: "",
+      REMARK: "",
+    });
+    setShow(false);
+  };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -25,11 +37,12 @@ function Modals({ idInput, exCoilId }) {
       ...previousData,
       [name]: value,
     }));
-    console.log(editData)
+    console.log(editData);
   }
 
   function handleSave(event) {
     event.preventDefault();
+    dispatch(producedCoilActions.updateProducedCoilsFields(idInput,editData));
     setShow(false);
   }
 
@@ -45,79 +58,81 @@ function Modals({ idInput, exCoilId }) {
         backdrop="static"
         keyboard={false}
         size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
+        aria-labelledby="example-modal-sizes-title-lg"
+        // centered
       >
         <Modal.Header closeButton>
           <Modal.Title>Edit Produced Coil</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-         
-            <Form onSubmit={handleSave}>
-              <Form.Group>
-                <Form.Label for="disabledTextInput">MSG COUNTER</Form.Label>
-                <Form.Control
-                  id="disabledTextInput"
-                  placeholder={`${idInput}`}
-                  disabled
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label for="disabledTextInput">
-                  Produced Coil Id
-                </Form.Label>
-                <Form.Control
-                  id="disabledTextInput"
-                  placeholder={`${exCoilId}`}
-                  disabled
-                />
-              </Form.Group>
+          <Form onSubmit={handleSave}>
+            <Form.Group>
+              <Form.Label for="disabledTextInput">MSG COUNTER</Form.Label>
+              <Form.Control
+                id="disabledTextInput"
+                placeholder={`${idInput}`}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label for="disabledTextInput">Produced Coil Id</Form.Label>
+              <Form.Control
+                id="disabledTextInput"
+                placeholder={`${exCoilId}`}
+                disabled
+              />
+            </Form.Group>
 
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Prod Coil Status</Form.Label>
-                <Form.Control as="select">
-                  <option>10: PLANNED</option>
-                  <option>90: PRODUCED</option>
-                  <option>95: WEIGHTED</option>
-                  <option>100: RELEASED</option>
-                  <option>115: DELETED</option>
-                </Form.Control>
-              </Form.Group>
+            <Form.Group controlId="exampleForm.ControlSelect1">
+              <Form.Label>Prod Coil Status</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                name="REMARK"
+                value={editData.REMARK}
+                onChange={handleChange}
+              >
+                <option>10: PLANNED</option>
+                <option>90: PRODUCED</option>
+                <option>95: WEIGHTED</option>
+                <option>100: RELEASED</option>
+                <option>115: DELETED</option>
+              </Form.Control>
+            </Form.Group>
 
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Measured Weight</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="measWeight"
-                  placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_AVG}`}
-                  value={editData.measWeight}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Scheduled Id</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="scheduledId"
-                  placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_MIN}`}
-                  value={editData.scheduledId}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+            <Form.Group controlId="exampleForm.ControlInput1">
+              <Form.Label>Measured Weight</Form.Label>
+              <Form.Control
+                type="text"
+                name="UPCOAT_WEIGHT_MAX"
+                placeholder={`${prodCoilFields[0].UPCOAT_WEIGHT_AVG}`}
+                value={editData.UPCOAT_WEIGHT_MAX}
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Up Code Weight</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="UpCodeWeight"
-                  placeholder={"0"}
-                  // value={prodCoilFields[0].upcoaT_WEIGHT_AVG}
-                  // onChange={handleChange}
-                />
-              </Form.Group>
-            </Form>
-    
+            <Form.Group controlId="exampleForm.ControlInput1">
+              <Form.Label>Scheduled Id</Form.Label>
+              <Form.Control
+                type="text"
+                name="UPCOAT_WEIGHT_AVG"
+                placeholder={`${prodCoilFields[0].UPCOAT_WEIGHT_MIN}`}
+                value={editData.UPCOAT_WEIGHT_AVG}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlInput1">
+              <Form.Label>Up Code Weight</Form.Label>
+              <Form.Control
+                type="text"
+                name="UPCOAT_WEIGHT_MIN"
+                placeholder={"0"}
+                value={editData.UPCOAT_WEIGHT_MIN}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

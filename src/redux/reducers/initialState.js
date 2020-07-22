@@ -3,5 +3,6 @@ export default {
   savedProduct: {},
   currentUser: {},
   producedCoils:[],
-  producedCoilsFields:[""]
+  producedCoilsFields:[""],
+  updatedProducedCoilsFields:{}
 };

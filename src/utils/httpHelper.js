@@ -7,12 +7,12 @@ const url = (endPoint) => {
   return `${httpConfig.apiUrl}/${endPoint}`;
 };
 
-export const httpPost = (data, endPoint) => {
+export const httpPost = (apiKey,endPoint,data) => {
   return fetch(endPoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      apiKey: "28FD5FFC-44CB-46E7-93AB-377B1EAE2D90",
+       apiKey: `${JSON.parse(apiKey)}`,
     },
 
     mode: "same-origin",
@@ -27,11 +27,25 @@ export const httpGet = (apiKey, endPoint) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      apiKey: `${JSON.parse(apiKey)}`,
+       apiKey: `${JSON.parse(apiKey)}`,
     },
     mode: "same-origin",
   }).then(handleResponse);
   //.catch(handleError);
+};
+
+export const httpPut = (apiKey,endPoint,data) => {
+  return fetch(endPoint, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+       apiKey: `${JSON.parse(apiKey)}`,
+    },
+
+    mode: "same-origin",
+    body: JSON.stringify(data),
+  }).then(handleResponse);
+  // .catch(handleError);
 };
 
 function handleResponse(response) {

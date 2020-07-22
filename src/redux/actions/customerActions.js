@@ -116,10 +116,12 @@ export function userGetApi() {
 
 export function registerUserApi(user) {
   let endPoint = "store";
-  return httpHelper.httpPost(user, endPoint);
+  let apiKey = localStorage.getItem("userToken");
+  return httpHelper.httpPost(apiKey,endPoint,user);
 }
 
 export function userLoginApi(user) {
   let endPoint = "api/users/login";
-  return httpHelper.httpPost(user,endPoint);
+  let apiKey = localStorage.getItem("userToken");
+  return httpHelper.httpPost(apiKey,endPoint,user);
 }
