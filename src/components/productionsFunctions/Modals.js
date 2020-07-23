@@ -6,16 +6,19 @@ import * as producedCoilActions from "../../redux/actions/producedCoilActions";
 function Modals({ idInput, exCoilId }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
+  const prodCoilFields = useSelector(
+    (state) => state.producedCoilFiledsByIdReducer
+  );
+
   const [editData, setEditData] = useState({
     UPCOAT_WEIGHT_AVG: "",
     UPCOAT_WEIGHT_MAX: "",
     UPCOAT_WEIGHT_MIN: "",
     REMARK: "",
+    EX_COIL_ID:exCoilId,
+    MSG_COUNTER:idInput
   });
-  const prodCoilFields = useSelector(
-    (state) => state.producedCoilFiledsByIdReducer
-  );
-
+ 
   const handleShow = () => {
     dispatch(producedCoilActions.getProducedCoilsFieldsById(idInput));
     setShow(true);
@@ -89,11 +92,11 @@ function Modals({ idInput, exCoilId }) {
                 as="select"
                 type="text"
                 name="REMARK"
-                value={editData.REMARK}
+                
                 onChange={handleChange}
               >
-                <option>10: PLANNED</option>
-                <option>90: PRODUCED</option>
+                <option >10: PLANNED</option>
+                <option value={editData.REMARK}  selected>90: PRODUCED</option>
                 <option>95: WEIGHTED</option>
                 <option>100: RELEASED</option>
                 <option>115: DELETED</option>
@@ -104,9 +107,9 @@ function Modals({ idInput, exCoilId }) {
               <Form.Label>Measured Weight</Form.Label>
               <Form.Control
                 type="text"
-                name="UPCOAT_WEIGHT_MAX"
-                placeholder={`${prodCoilFields[0].UPCOAT_WEIGHT_AVG}`}
-                value={editData.UPCOAT_WEIGHT_MAX}
+                name="UPCOAT_WEIGHT_AVG"
+                placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_AVG}`}
+                value={editData.UPCOAT_WEIGHT_AVG}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -115,9 +118,9 @@ function Modals({ idInput, exCoilId }) {
               <Form.Label>Scheduled Id</Form.Label>
               <Form.Control
                 type="text"
-                name="UPCOAT_WEIGHT_AVG"
-                placeholder={`${prodCoilFields[0].UPCOAT_WEIGHT_MIN}`}
-                value={editData.UPCOAT_WEIGHT_AVG}
+                name="UPCOAT_WEIGHT_MAX"
+                placeholder={`${prodCoilFields[0].upcoaT_WEIGHT_MAX}`}
+                value={editData.UPCOAT_WEIGHT_MAX}
                 onChange={handleChange}
               />
             </Form.Group>
