@@ -8,8 +8,8 @@ import SchedulesListManagement from "../productionsFunctions/SchedulesListManage
 import InputCoilManagement from "../productionsFunctions/InputCoilManagement";
 import ProducedCoilManagement from "../productionsFunctions/ProducedCoilManagement";
 import LineStoppage from "../productionsFunctions/LineStoppage";
-import { Route,Switch } from "react-router-dom";
-
+import { Route, Switch, Router } from "react-router-dom";
+import { history } from "../../utils/history";
 const Main = ({
   collapsed,
   rtl,
@@ -29,14 +29,24 @@ const Main = ({
         <NavBar />
       </header>
       <div>
-        <Switch>
-          <Route path={"/homepage/scheduleslist"} component={SchedulesListManagement} />
-          <Route path={"/homepage/inputcoil"} component={InputCoilManagement} />
-          <Route path={"/homepage/producedcoil"} component={ProducedCoilManagement} />
-          <Route path={"/homepage/linestoppage"} component={LineStoppage} />
-        </Switch>
+        <Router history={history}>
+          <Switch>
+            <Route
+              path={"/homepage/scheduleslist"}
+              component={SchedulesListManagement}
+            />
+            <Route
+              path={"/homepage/inputcoil"}
+              component={InputCoilManagement}
+            />
+            <Route
+              path={"/homepage/producedcoil"}
+              component={ProducedCoilManagement}
+            />
+            <Route path={"/homepage/linestoppage"} component={LineStoppage} />
+          </Switch>
+        </Router>
       </div>
-       
     </main>
   );
 };

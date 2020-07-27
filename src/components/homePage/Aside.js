@@ -23,8 +23,9 @@ import {
 } from "react-icons/fa";
 //import {  FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart } from "@fortawesome/free-solid-svg-icons";
 import sidebarBg from "./assets/home_slide_2.jpg";
-import { Switch, Link } from "react-router-dom";
-import SchedulesListManagement from "../productionsFunctions/SchedulesListManagement";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import * as sideBarMenuActions from "../../redux/actions/sideBarMenuActions";
 
 const Aside = ({
   image,
@@ -35,6 +36,27 @@ const Aside = ({
   handleCollapsedChange,
 }) => {
   const intl = useIntl();
+  const dispatch = useDispatch();
+
+  function handleClickSchedules(event) {
+    event.preventDefault();
+    dispatch(sideBarMenuActions.SchedulesListManagementLink());
+  }
+  function handleClickInput(event) {
+    event.preventDefault();
+    dispatch(sideBarMenuActions.InputCoilManagementLink());
+  }
+
+  function handleClickProduced(event) {
+    event.preventDefault();
+    dispatch(sideBarMenuActions.ProducedCoilManagementLink());
+  }
+
+  function handleClickLineStoppage(event) {
+    event.preventDefault();
+    dispatch(sideBarMenuActions.LineStoppageLink());
+  }
+
   return (
     <ProSidebar
       image={image ? sidebarBg : false}
@@ -86,24 +108,23 @@ const Aside = ({
           >
             <MenuItem>
               {intl.formatMessage({ id: "Schedules List Mangement" })}{" "}
-              <Link to="/homepage/scheduleslist"/>
+              <Link onClick={handleClickSchedules} />
             </MenuItem>
 
             <MenuItem>
               {intl.formatMessage({ id: "Input Coil Management" })}{" "}
-              <Link to="/homepage/inputcoil"/>
-              
+              <Link onClick={handleClickInput} />
             </MenuItem>
 
             <MenuItem>
               {intl.formatMessage({ id: "Produced Coil Management" })}{" "}
-              <Link to="/homepage/producedcoil"/>
+              <Link onClick={handleClickProduced} />
             </MenuItem>
 
-            <MenuItem>{intl.formatMessage({ id: "Line Stoppages" })} 
-            <Link to="/homepage/linestoppage"/>
+            <MenuItem>
+              {intl.formatMessage({ id: "Line Stoppages" })}
+              <Link onClick={handleClickLineStoppage} />
             </MenuItem>
-      
           </SubMenu>
           <SubMenu
             // prefix={<span className="badge gray">3</span>}

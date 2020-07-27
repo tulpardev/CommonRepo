@@ -114,7 +114,7 @@ function Modals({ idInput, exCoilId }) {
               />
             </Form.Group>
 
-            <Form.Group controlId="exampleForm.ControlInput1">
+            <Form.Group controlId="exampleForm.ControlInput2">
               <Form.Label>Scheduled Id</Form.Label>
               <Form.Control
                 type="text"
