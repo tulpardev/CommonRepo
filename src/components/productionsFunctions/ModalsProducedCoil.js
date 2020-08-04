@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import * as producedCoilActions from "../../redux/actions/producedCoilActions";
 
-function Modals({ idInput, exCoilId }) {
+function ModalsProducedCoil({ idInput, exCoilId }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const prodCoilFields = useSelector(
@@ -92,11 +92,11 @@ function Modals({ idInput, exCoilId }) {
                 as="select"
                 type="text"
                 name="REMARK"
-                
+                value={editData.REMARK}
                 onChange={handleChange}
               >
                 <option >10: PLANNED</option>
-                <option value={editData.REMARK}  selected>90: PRODUCED</option>
+                <option >90: PRODUCED</option>
                 <option>95: WEIGHTED</option>
                 <option>100: RELEASED</option>
                 <option>115: DELETED</option>
@@ -150,4 +150,4 @@ function Modals({ idInput, exCoilId }) {
   );
 }
 
-export default Modals;
+export default ModalsProducedCoil;

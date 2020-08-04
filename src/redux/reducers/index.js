@@ -4,11 +4,12 @@ import authenticationReducer from "./authenticationReducer";
 import registrationReducer from "./registrationReducer";
 import alertReducer from "./alertReducer";
 import userListReducer from "./userListReducer";
-import producedCoilsReducer from "./producedCoilsReducer"
+import producedCoilsForTableReducer from "./producedCoilsForTableReducer"
 import producedCoilFiledsByIdReducer from "./producedCoilFiledsByIdReducer"
 import updateProducedCoilsFieldsReducer from "./updateProducedCoilsFieldsReducer"
 import getProducedCoilsByFilterReducer from "./getProducedCoilsByFilterReducer"
 import sideBarMenuReducer from "./sideBarMenuReducer"
+import inputCoilsForTableReducer from "./inputCoilsForTableReducer"
 
 const rootReducer = combineReducers({
   userReducer: userReducer,
@@ -16,10 +17,11 @@ const rootReducer = combineReducers({
   registrationReducer: registrationReducer,
   userListReducer: userListReducer,
   alertReducer: alertReducer,
-  producedCoilsReducer:producedCoilsReducer,
+  producedCoilsForTableReducer:producedCoilsForTableReducer,
   producedCoilFiledsByIdReducer:producedCoilFiledsByIdReducer,
   updateProducedCoilsFieldsReducer:updateProducedCoilsFieldsReducer,
   getProducedCoilsByFilterReducer:getProducedCoilsByFilterReducer,
-  sideBarMenuReducer:sideBarMenuReducer
+  sideBarMenuReducer:sideBarMenuReducer,
+  inputCoilsForTableReducer:inputCoilsForTableReducer
 });
 export default rootReducer;

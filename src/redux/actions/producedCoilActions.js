@@ -122,7 +122,7 @@ export function updateProducedCoilsFieldsApi(id, fields) {
 }
 
 export function getProducedCoilsByFilterApi(filterData) {
-  let endPoint = "api/users/login";
+  let endPoint = "api/MSG_PROD_COIL";
   let apiKey = localStorage.getItem("userToken");
   return httpHelper.httpPost(apiKey, endPoint, filterData);
 }

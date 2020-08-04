@@ -7,4 +7,5 @@ export default {
   updatedProducedCoilsFields: {},
   producedCoilsFilter: {},
   sideBarMenuLink: "",
+  inputCoils:[]
 };
