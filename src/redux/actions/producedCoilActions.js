@@ -102,9 +102,7 @@ export function getProducedCoilsByFilter(filterData) {
 }
 
 export function getProducedCoilsApi(size, count) {
-  console.log(size, count);
   let endPoint = `api/MSG_PROD_COIL?&size=${size}&count=${count}`;
-  console.log(endPoint);
   let apiKey = localStorage.getItem("userToken");
   return httpHelper.httpGet(apiKey, endPoint);
 }

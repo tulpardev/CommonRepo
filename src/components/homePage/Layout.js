@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import Aside from "./Aside";
 import Main from "./Main";
-import {
-  Router,
-  Route,
-  Switch,
-  Redirect,
-  BrowserRouter,
-} from "react-router-dom";
-import SchedulesListManagement from "../productionsFunctions/SchedulesListManagement";
 
 function Layout({ setLocale }) {
   const [rtl, setRtl] = useState(false);
@@ -20,10 +12,6 @@ function Layout({ setLocale }) {
     setCollapsed(checked);
   };
 
-  const handleRtlChange = (checked) => {
-    setRtl(checked);
-    setLocale(checked ? "ar" : "en");
-  };
   const handleImageChange = (checked) => {
     setImage(checked);
   };
@@ -37,7 +25,6 @@ function Layout({ setLocale }) {
       <Aside
         image={image}
         collapsed={collapsed}
-        rtl={rtl}
         toggled={toggled}
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
@@ -46,10 +33,8 @@ function Layout({ setLocale }) {
         image={image}
         toggled={toggled}
         collapsed={collapsed}
-        rtl={rtl}
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
-        handleRtlChange={handleRtlChange}
         handleImageChange={handleImageChange}
       />
     

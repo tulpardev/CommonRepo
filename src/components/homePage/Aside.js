@@ -1,5 +1,4 @@
 import React from "react";
-import { useIntl } from "react-intl";
 import {
   ProSidebar,
   Menu,
@@ -9,22 +8,11 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import {
-  FaTachometerAlt,
-  FaGem,
-  FaList,
-  FaGithub,
-  FaRegLaughWink,
-  FaHeart,
-  FaSignOutAlt,
-  FaServer,
-  FaFileExcel,
-  FaIndustry,
-} from "react-icons/fa";
+import { FaList, FaSignOutAlt, FaFileExcel, FaIndustry } from "react-icons/fa";
 //import {  FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart } from "@fortawesome/free-solid-svg-icons";
 import sidebarBg from "./assets/home_slide_2.jpg";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as sideBarMenuActions from "../../redux/actions/sideBarMenuActions";
 
 const Aside = ({
@@ -35,7 +23,6 @@ const Aside = ({
   handleToggleSidebar,
   handleCollapsedChange,
 }) => {
-  const intl = useIntl();
   const dispatch = useDispatch();
 
   function handleClickSchedules(event) {
@@ -79,7 +66,7 @@ const Aside = ({
             whiteSpace: "nowrap",
           }}
         >
-          {intl.formatMessage({ id: "sidebarTitle" })}
+          YILDIZ DEMİR ÇELİK
         </div>
       </SidebarHeader>
 
@@ -103,46 +90,41 @@ const Aside = ({
         <Menu iconShape="circle">
           <SubMenu
             // suffix={<span className="badge yellow">3</span>}
-            title={intl.formatMessage({ id: "Production Functions" })}
+            title={"Production Functions"}
             icon={<FaIndustry />}
           >
             <MenuItem>
-              {intl.formatMessage({ id: "Schedules List Mangement" })}{" "}
-              <Link onClick={handleClickSchedules} />
+              Schedules List Mangements
+              <Link  to="" onClick={handleClickSchedules} />
             </MenuItem>
 
             <MenuItem>
-              {intl.formatMessage({ id: "Input Coil Management" })}{" "}
-              <Link onClick={handleClickInput} />
+              Input Coil Management
+              <Link to="" onClick={handleClickInput} />
             </MenuItem>
 
             <MenuItem>
-              {intl.formatMessage({ id: "Produced Coil Management" })}{" "}
-              <Link onClick={handleClickProduced} />
+              Produced Coil Management
+              <Link to="" onClick={handleClickProduced} />
             </MenuItem>
 
             <MenuItem>
-              {intl.formatMessage({ id: "Line Stoppages" })}
-              <Link onClick={handleClickLineStoppage} />
+              Line Stoppages
+              <Link to="" onClick={handleClickLineStoppage} />
             </MenuItem>
           </SubMenu>
           <SubMenu
             // prefix={<span className="badge gray">3</span>}
-            title={intl.formatMessage({ id: "Report Print Out" })}
+            title={"Report Print Out"}
             icon={<FaFileExcel />}
           >
             {/* <MenuItem>{intl.formatMessage({ id: "submenu" })} 1</MenuItem>
             <MenuItem>{intl.formatMessage({ id: "submenu" })} 2</MenuItem>
             <MenuItem>{intl.formatMessage({ id: "submenu" })} 3</MenuItem> */}
           </SubMenu>
-          <SubMenu
-            title={intl.formatMessage({ id: "System Functions" })}
-            icon={<FaList />}
-          >
-            <MenuItem>
-              {intl.formatMessage({ id: "User Configrations" })}{" "}
-            </MenuItem>
-            <MenuItem>{intl.formatMessage({ id: "Settings" })} </MenuItem>
+          <SubMenu title={"System Functions"} icon={<FaList />}>
+            <MenuItem>User Configrations</MenuItem>
+            <MenuItem>Settings </MenuItem>
             {/* <SubMenu title={`${intl.formatMessage({ id: "submenu" })} 3`}>
               <MenuItem>{intl.formatMessage({ id: "submenu" })} 3.1 </MenuItem>
               <MenuItem>{intl.formatMessage({ id: "submenu" })} 3.2 </MenuItem>
@@ -164,15 +146,10 @@ const Aside = ({
 
       <SidebarFooter style={{ textAlign: "center" }}>
         <div className="sidebar-btn-wrapper">
-          <a
-            // // href="https://github.com/azouaoui-med/react-pro-sidebar"
-            // target="_blank"
-            className="sidebar-btn"
-            rel="noopener noreferrer"
-          >
+          <div>
             <FaSignOutAlt />
-            <span> {intl.formatMessage({ id: "Logout" })}</span>
-          </a>
+            <span> Logout</span>
+          </div>
         </div>
       </SidebarFooter>
     </ProSidebar>

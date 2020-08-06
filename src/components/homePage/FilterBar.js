@@ -20,7 +20,7 @@ function FilterBar({ sideBarLink }) {
     CoilStatus: "",
   });
 
-  const ExampleCustomInput = ({ value, onClick }) => (
+  const DateRangeCustomInput = ({ value, onClick }) => (
     <button
       className="btn btn-info"
       onClick={onClick}
@@ -89,7 +89,15 @@ function FilterBar({ sideBarLink }) {
       ProdStartDate: ProdStartDate,
       ProdEndDate: ProdEndDate,
     };
-    //dispatch(producedCoilActions.getProducedCoilsByFilter(filteredDataWithCheck));
+    if (sideBarLink === "scheduleListLink") {
+      NavbarBrand = "Schedule List Management";
+    } else if (sideBarLink === "inputCoilLink") {
+      NavbarBrand = "Input Coil Management";
+    } else if (sideBarLink === "producedCoilLink") {
+      //dispatch(producedCoilActions.getProducedCoilsByFilter(filteredDataWithCheck));
+    } else if (sideBarLink === "lineStoppageLink") {
+      NavbarBrand = "Line Stoppage Management";
+    }
   }
 
   const formatTime = (date) => {
@@ -145,7 +153,7 @@ function FilterBar({ sideBarLink }) {
         selectsStart
         startDate={startDate}
         endDate={endDate}
-        customInput={<ExampleCustomInput />}
+        customInput={<DateRangeCustomInput />}
       />
       <DatePicker
         selected={endDate}
@@ -154,10 +162,10 @@ function FilterBar({ sideBarLink }) {
         startDate={startDate}
         endDate={endDate}
         minDate={startDate}
-        customInput={<ExampleCustomInput />}
+        customInput={<DateRangeCustomInput />}
       />
       <Form inline onSubmit={handleSave}>
-        <Form inline>
+        <Form.Group>
           <InputGroup style={{ marginLeft: 10 }}>
             <InputGroup.Prepend>
               <InputGroup.Checkbox
@@ -175,8 +183,8 @@ function FilterBar({ sideBarLink }) {
               onChange={handleChange}
             />
           </InputGroup>
-        </Form>
-        <Form inline>
+        </Form.Group>
+        <Form.Group>
           <InputGroup style={{ marginLeft: 10 }}>
             <InputGroup.Prepend>
               <InputGroup.Checkbox
@@ -194,8 +202,8 @@ function FilterBar({ sideBarLink }) {
               onChange={handleChange}
             />
           </InputGroup>
-        </Form>
-        <Form inline>
+        </Form.Group>
+        <Form.Group>
           <InputGroup style={{ marginLeft: 10 }}>
             <InputGroup.Prepend>
               <InputGroup.Checkbox
@@ -211,7 +219,7 @@ function FilterBar({ sideBarLink }) {
               //value={filterData.CoilStatus}
               onChange={handleChange}
             >
-              <option selected></option>
+              <option></option>
               <option>10: PLANNED</option>
               <option>90: PRODUCED</option>
               <option>95: WEIGHTED</option>
@@ -219,12 +227,12 @@ function FilterBar({ sideBarLink }) {
               <option>115: DELETED</option>
             </Form.Control>
           </InputGroup>
-        </Form>
-        <Form inline>
+        </Form.Group>
+        <Form.Group>
           <Button type="submit" style={{ marginLeft: 10 }}>
             Filter
           </Button>
-        </Form>
+        </Form.Group>
       </Form>
     </Navbar>
   );

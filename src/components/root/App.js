@@ -7,11 +7,11 @@ import { history } from "../../utils/history";
 import { PrivateRoute } from "../userloginPage/PrivateRoute";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import HomePage from "../HomePage/HomePage";
 
 function App() {
-  const alert = useSelector((state) => state.alertReducer);
+  //const alert = useSelector((state) => state.alertReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {

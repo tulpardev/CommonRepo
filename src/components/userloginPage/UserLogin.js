@@ -7,7 +7,7 @@ const UserLogin = () => {
   const [userData, setUserData] = useState({ name: "", password: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const user = useSelector((state) => state.userReducer);
+  //const user = useSelector((state) => state.userReducer);
 
   const loggingIn = useSelector(
     (state) => state.authenticationReducer.loggingIn
