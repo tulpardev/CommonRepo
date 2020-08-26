@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "../../../node_modules/react-datepicker/dist/react-datepicker.css";
 import { Form, Navbar, Button, InputGroup, FormControl } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector} from "react-redux";
 import * as producedCoilActions from "../../redux/actions/producedCoilActions";
 
 function FilterBar({ sideBarLink }) {
@@ -30,6 +30,8 @@ function FilterBar({ sideBarLink }) {
     </button>
   );
 
+  const pageInfo = useSelector((state) => state.setPageInfoReducer);
+
   function handleChangeCheckBoxProd(evt) {
     setProdCoilIdCheck(evt.target.checked);
   }
@@ -46,7 +48,7 @@ function FilterBar({ sideBarLink }) {
   function handleChange(event) {
     let { name, value } = event.target;
     if (name === "CoilStatus" && value === "10: PLANNED") {
-      value = 10;
+      value = "SF01";
     } else if (name === "CoilStatus" && value === "90: PRODUCED") {
       value = 90;
     } else if (name === "CoilStatus" && value === "95: WEIGHTED") {
@@ -60,6 +62,7 @@ function FilterBar({ sideBarLink }) {
       ...previousData,
       [name]: value,
     }));
+    console.log(filterData);
   }
 
   function handleSave(event) {
@@ -82,22 +85,37 @@ function FilterBar({ sideBarLink }) {
       ProdEndDate = "";
     }
 
-    let filteredDataWithCheck = {
-      ProdCoilId: ProdCoilId,
-      InputCoilId: InputCoilId,
-      CoilStatus: CoilStatus,
-      ProdStartDate: ProdStartDate,
-      ProdEndDate: ProdEndDate,
-    };
+    let filteredDataWithCheck = [
+      {
+        Category: "EX_COIL_ID",
+        Value: ProdCoilId,
+      },
+      {
+        Category: "SCHEDULE_ID",
+        Value: InputCoilId,
+      },
+      {
+        Category: "EN_STEEL_GRADE_ID",
+        Value: CoilStatus,
+      },
+    ];
+
     if (sideBarLink === "scheduleListLink") {
       NavbarBrand = "Schedule List Management";
     } else if (sideBarLink === "inputCoilLink") {
       NavbarBrand = "Input Coil Management";
     } else if (sideBarLink === "producedCoilLink") {
-      //dispatch(producedCoilActions.getProducedCoilsByFilter(filteredDataWithCheck));
+      let pagination = {
+        ...pageInfo,
+        filterQuery:JSON.stringify(filteredDataWithCheck)
+      }
+      dispatch(
+        producedCoilActions.getProducedCoilsByFilter(pagination)
+      );
     } else if (sideBarLink === "lineStoppageLink") {
       NavbarBrand = "Line Stoppage Management";
     }
+    console.log(filteredDataWithCheck);
   }
 
   const formatTime = (date) => {

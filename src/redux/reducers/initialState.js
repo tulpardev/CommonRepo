@@ -8,5 +8,9 @@ export default {
   producedCoilsFilter: {},
   sideBarMenuLink: "",
   inputCoils:[],
-  addInputCoil:{}
+  addInputCoil:{},
+  pagination : {
+    pageSize:10,
+    pageCount:1
+  }
 };

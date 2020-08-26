@@ -17,8 +17,17 @@ export function getProducedCoilsByFilterSuccess(filterData) {
   return { type: actionTypes.GET_PRODUCED_COIL_BY_FILTER, payload: filterData };
 }
 
+export function getProducedCoilsPageInfo(pagination) {
+  return { type: actionTypes.SET_PAGE_INFO, payload: pagination };
+}
+
 export function getProducedCoils(size, count) {
   return function (dispatch) {
+    let pagination = {
+      pageSize:size,
+      pageCount:count
+    }
+    dispatch(getProducedCoilsPageInfo(pagination));
     return getProducedCoilsApi(size, count)
       .then(
         (result) => {
@@ -122,5 +131,6 @@ export function updateProducedCoilsFieldsApi(id, fields) {
 export function getProducedCoilsByFilterApi(filterData) {
   let endPoint = "api/MSG_PROD_COIL";
   let apiKey = localStorage.getItem("userToken");
+  console.log(JSON.stringify(filterData))
   return httpHelper.httpPost(apiKey, endPoint, filterData);
 }
