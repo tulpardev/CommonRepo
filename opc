@@ -1,0 +1,544 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.ServiceProcess;
+using System.Text;
+using Kepware.ClientAce.OpcDaClient;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections;
+
+namespace PLStock
+{
+    public partial class Service1 : ServiceBase
+    {
+
+        //C:\Windows\Microsoft.NET\Framework\v4.0.30319\installutil.exe PLStock.exe
+        //Initilize the server object
+        Kepware.ClientAce.OpcDaClient.DaServerMgt DAserver = new Kepware.ClientAce.OpcDaClient.DaServerMgt();
+        //Initilize the connection info class
+        Kepware.ClientAce.OpcDaClient.ConnectInfo connectInfo = new Kepware.ClientAce.OpcDaClient.ConnectInfo();
+        bool connectFailed;
+        int activeServerSubscriptionHandle;
+        int clientSubscriptionHandle;
+        public ItemIdentifier[] itemIdentifiers = new ItemIdentifier[3];
+        public SqlWriteDataContext SqlWrite = new SqlWriteDataContext();
+        string Coil_ID, Coil_ID_Search;
+        int Coil_Weight, Coil_Area, Coil_Row, Coil_Column, Coil_Floor, Tong_X, Tong_Y, Tong_Z;
+
+        public Service1()
+        {
+            InitializeComponent();
+        }
+
+        protected override void OnStart(string[] args)
+        {
+            // Initialize the connect info object data
+            connectInfo.LocalId = "en";
+            connectInfo.KeepAliveTime = 5000;
+            connectInfo.RetryAfterConnectionError = true;
+            //Try the server connection
+            DAserver.Connect("opcda://localhost/Kepware.KEPServerEX.V6", 0, ref connectInfo, out connectFailed);
+            //Call the method for subscribing to data
+            Subscribe2Data();
+            ModifySubscription(true);
+            SubscribeToOPCDAServerEvents();
+        }
+
+        private void SubscribeToOPCDAServerEvents()
+        {
+            DAserver.ReadCompleted += new DaServerMgt.ReadCompletedEventHandler(DAserver_ReadCompleted);
+            //DAServer.WriteCompleted += new DaServerMgt.WriteCompletedEventHandler(DAserver_WriteCompleted);
+            DAserver.DataChanged += new DaServerMgt.DataChangedEventHandler(DAserver_DataChanged);
+            DAserver.ServerStateChanged += new DaServerMgt.ServerStateChangedEventHandler(DAserver_ServerStateChanged);
+        }
+
+        private void DAserver_ReadCompleted(int transactionHandle, bool allQualitiesGood, bool noErrors, ItemValueCallback[] itemValues)
+        {
+            try
+            {
+                foreach (ItemValueCallback itemValue in itemValues)
+                {
+                    if (itemValue.ResultID.Succeeded)
+                    {
+                        //OPC_TABLE opc_table = new OPC_TABLE();
+                        //opc_table.ShortDeger1 = Convert.ToInt16(itemValue.Value);
+                        //SqlWrite.OPC_TABLEs.InsertOnSubmit(opc_table); //olay değişkenini komple dosyaolayları tablosuna yaz
+                        //SqlWrite.SubmitChanges();// değişiklikleri onayla
+                        //Console.WriteLine("Item: {0} Value: { 1}, Quality: { 2}, Timestamp: { 3} ", itemValue.ClientHandle, itemValue.Value, itemValue.Quality.Name, itemValue.TimeStamp);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Item error");
+                    }
+                }
+            }
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine("ReadCompleted exception. Reason: {0}", ex);
+
+            }
+
+        }
+
+        public void dataReadAsync()
+        {
+            int transactionHandle = 0;
+            int maxAge = 0;
+            ReturnCode returnCode;
+            try
+            {
+                // Call ReadAsync API method
+                returnCode = DAserver.ReadAsync(transactionHandle, maxAge, ref itemIdentifiers);
+                // Check result
+                if (returnCode != ReturnCode.SUCCEEDED)
+                {
+                    Console.WriteLine("ReadAsync failed for one or more items");
+                    // Examine ResultID objects for detailed information.
+                }
+            }
+
+            catch (Exception ex)
+            {
+                //Console.WriteLine("ReadAsync exception. Reason: {0}", ex);
+            }
+        }
+
+        public void writeDataCheck()
+        {
+            ItemIdentifier[] itemIdentifiers = new ItemIdentifier[2];
+            itemIdentifiers[0] = new ItemIdentifier();
+            itemIdentifiers[0].DataType = Type.GetType("System.Boolean");
+            itemIdentifiers[0].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenisemritekraralkontrol2";
+
+            itemIdentifiers[1] = new ItemIdentifier();
+            itemIdentifiers[1].DataType = Type.GetType("System.Boolean");
+            itemIdentifiers[1].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenonaybekletme2";
+
+            ItemValue[] itemValues = new ItemValue[2];
+            itemValues[0] = new ItemValue();
+            itemValues[0].Value = "1";
+
+            itemValues[1] = new ItemValue();
+            itemValues[1].Value = "1";
+
+            ReturnCode returnCode;
+            try
+            { // Call Write API method
+                returnCode = DAserver.Write(ref itemIdentifiers, itemValues);
+                // Check item results
+                if (returnCode != ReturnCode.SUCCEEDED)
+                {
+                    foreach (ItemIdentifier item in itemIdentifiers)
+                    {
+                        if (!item.ResultID.Succeeded)
+                        {
+                            //Console.WriteLine("Write failed for item: {0}", item.ItemName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("Write exception. Reason: {0}", ex); 
+            }
+        }
+
+        public void readSqlSearch()
+        {
+            var querySearch = SqlWrite.OPC_TABLEs.SingleOrDefault(q => q.Coil_ID == Coil_ID_Search && q.Op_Code == 1);
+            if (querySearch != null)
+            {
+                Coil_ID = querySearch.Coil_ID;
+                Coil_Area = Convert.ToInt16(querySearch.Coil_Area);
+                Coil_Row = Convert.ToInt16(querySearch.Coil_Row);
+                Coil_Column = Convert.ToInt16(querySearch.Coil_Column);
+                Coil_Floor = Convert.ToInt16(querySearch.Coil_Floor);
+                Tong_X = Convert.ToInt32(querySearch.Tong_X);
+                Tong_Y = Convert.ToInt32(querySearch.Tong_Y);
+                Tong_Z = Convert.ToInt32(querySearch.Tong_Z);
+                Coil_Weight = Convert.ToInt16(querySearch.Coil_Weight);
+            }
+        }
+
+        public void readSqlTake()
+        {
+            var queryTake = SqlWrite.OPC_TABLEs.SingleOrDefault(q => q.Coil_Row == Coil_Row && q.Coil_Column == Coil_Column && q.Coil_Floor == Coil_Floor && q.Op_Code == 1);
+            if (queryTake != null)
+            {
+                Coil_ID = queryTake.Coil_ID;
+                Coil_Area = Convert.ToInt16(queryTake.Coil_Area);
+                Coil_Row = Convert.ToInt16(queryTake.Coil_Row);
+                Coil_Column = Convert.ToInt16(queryTake.Coil_Column);
+                Coil_Floor = Convert.ToInt16(queryTake.Coil_Floor);
+                Tong_X = Convert.ToInt32(queryTake.Tong_X);
+                Tong_Y = Convert.ToInt32(queryTake.Tong_Y);
+                Tong_Z = Convert.ToInt32(queryTake.Tong_Z);
+                Coil_Weight = Convert.ToInt16(queryTake.Coil_Weight);
+            }
+        }
+
+        public void writeSql()
+        {
+            var querySame_Logic = SqlWrite.OPC_TABLEs.Where(q => q.Coil_Row == Coil_Row && q.Coil_Column == Coil_Column && q.Coil_Floor == Coil_Floor).ToList();
+            if (querySame_Logic.Count() != 0)
+            {
+                for (int i = 0; i < querySame_Logic.Count(); i++)
+                {
+                    querySame_Logic[i].Op_Code = -1;
+                }
+            }
+            var querySame_Coil_ID = SqlWrite.OPC_TABLEs.Where(q => q.Coil_ID == Coil_ID).ToList();
+            if (querySame_Coil_ID.Count() != 0)
+            {
+                for (int i = 0; i < querySame_Coil_ID.Count(); i++)
+                {
+                    querySame_Coil_ID[i].Op_Code = -1;
+                }
+            }
+
+            OPC_TABLE opc_table = new OPC_TABLE();
+            opc_table.Coil_ID = Coil_ID;
+            opc_table.Coil_Area = Coil_Area;
+            opc_table.Coil_Row = Coil_Row;
+            opc_table.Coil_Column = Coil_Column;
+            opc_table.Coil_Floor = Coil_Floor;
+            opc_table.Time = DateTime.Now;
+            opc_table.Tong_X = Tong_X;
+            opc_table.Tong_Y = Tong_Y;
+            opc_table.Tong_Z = Tong_Z;
+            opc_table.Coil_Weight = Coil_Weight;
+            opc_table.Op_Code = 1;
+            SqlWrite.OPC_TABLEs.InsertOnSubmit(opc_table);
+            SqlWrite.SubmitChanges();
+        }
+
+        public void writeData()
+        {
+            ItemIdentifier[] itemIdentifiers = new ItemIdentifier[9];
+            itemIdentifiers[0] = new ItemIdentifier();
+            itemIdentifiers[0].DataType = Type.GetType("System.String");
+            itemIdentifiers[0].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenCoilid2";
+
+            itemIdentifiers[1] = new ItemIdentifier();
+            itemIdentifiers[1].DataType = Type.GetType("System.Word");
+            itemIdentifiers[1].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenmachinecode2";
+
+            itemIdentifiers[2] = new ItemIdentifier();
+            itemIdentifiers[2].DataType = Type.GetType("System.Word");
+            itemIdentifiers[2].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenxljk2";
+
+            itemIdentifiers[3] = new ItemIdentifier();
+            itemIdentifiers[3].DataType = Type.GetType("System.Word");
+            itemIdentifiers[3].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenyljk2";
+
+            itemIdentifiers[4] = new ItemIdentifier();
+            itemIdentifiers[4].DataType = Type.GetType("System.Word");
+            itemIdentifiers[4].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenzljk2";
+
+            itemIdentifiers[5] = new ItemIdentifier();
+            itemIdentifiers[5].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[5].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenxmm2";
+
+            itemIdentifiers[6] = new ItemIdentifier();
+            itemIdentifiers[6].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[6].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenymm2";
+
+            itemIdentifiers[7] = new ItemIdentifier();
+            itemIdentifiers[7].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[7].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenzmm2";
+
+            itemIdentifiers[8] = new ItemIdentifier();
+            itemIdentifiers[8].DataType = Type.GetType("System.Word");
+            itemIdentifiers[8].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgelenkg2";
+
+            ItemValue[] itemValues = new ItemValue[9];
+            itemValues[0] = new ItemValue();
+            itemValues[0].Value = Coil_ID;
+            itemValues[1] = new ItemValue();
+            itemValues[1].Value = Coil_Area;
+            itemValues[2] = new ItemValue();
+            itemValues[2].Value = Coil_Row;
+            itemValues[3] = new ItemValue();
+            itemValues[3].Value = Coil_Column;
+            itemValues[4] = new ItemValue();
+            itemValues[4].Value = Coil_Floor;
+            itemValues[5] = new ItemValue();
+            itemValues[5].Value = Tong_X;
+            itemValues[6] = new ItemValue();
+            itemValues[6].Value = Tong_Y;
+            itemValues[7] = new ItemValue();
+            itemValues[7].Value = Tong_Z;
+            itemValues[8] = new ItemValue();
+            itemValues[8].Value = Coil_Weight;
+
+            ReturnCode returnCode;
+            try
+            { // Call Write API method
+                returnCode = DAserver.Write(ref itemIdentifiers, itemValues);
+                // Check item results
+                if (returnCode != ReturnCode.SUCCEEDED)
+                {
+                    foreach (ItemIdentifier item in itemIdentifiers)
+                    {
+                        if (!item.ResultID.Succeeded)
+                        {
+                            //Console.WriteLine("Write failed for item: {0}", item.ItemName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("Write exception. Reason: {0}", ex); 
+            }
+        }
+
+        public void readData()
+        {
+            //Declare variables
+            ItemIdentifier[] itemIdentifiers = new ItemIdentifier[10];
+            itemIdentifiers[0] = new ItemIdentifier();
+            itemIdentifiers[0].DataType = Type.GetType("System.String");
+            itemIdentifiers[0].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenCoilid2";
+            itemIdentifiers[1] = new ItemIdentifier();
+            itemIdentifiers[1].DataType = Type.GetType("System.Word");
+            itemIdentifiers[1].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenmachinecode2";
+            itemIdentifiers[2] = new ItemIdentifier();
+            itemIdentifiers[2].DataType = Type.GetType("System.Word");
+            itemIdentifiers[2].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenxljk2";
+            itemIdentifiers[3] = new ItemIdentifier();
+            itemIdentifiers[3].DataType = Type.GetType("System.Word");
+            itemIdentifiers[3].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenyljk2";
+            itemIdentifiers[4] = new ItemIdentifier();
+            itemIdentifiers[4].DataType = Type.GetType("System.Word");
+            itemIdentifiers[4].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenzljk2";
+            itemIdentifiers[5] = new ItemIdentifier();
+            itemIdentifiers[5].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[5].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenxmm2";
+            itemIdentifiers[6] = new ItemIdentifier();
+            itemIdentifiers[6].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[6].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenymm2";
+            itemIdentifiers[7] = new ItemIdentifier();
+            itemIdentifiers[7].DataType = Type.GetType("System.DWord");
+            itemIdentifiers[7].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenzmm2";
+            itemIdentifiers[8] = new ItemIdentifier();
+            itemIdentifiers[8].DataType = Type.GetType("System.Word");
+            itemIdentifiers[8].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenkg2";
+            itemIdentifiers[9] = new ItemIdentifier();
+            itemIdentifiers[9].DataType = Type.GetType("System.String");
+            itemIdentifiers[9].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenaracoilid2";
+
+            int maxAge = 0;
+            ItemValue[] itemValues = null;
+            DAserver.Read(maxAge, ref itemIdentifiers, out itemValues);
+
+            Coil_ID = Convert.ToString(itemValues[0].Value);
+            Coil_Area = Convert.ToInt16(itemValues[1].Value);
+            Coil_Row = Convert.ToInt16(itemValues[2].Value);
+            Coil_Column = Convert.ToInt16(itemValues[3].Value);
+            Coil_Floor = Convert.ToInt16(itemValues[4].Value);
+            Tong_X = Convert.ToInt32(itemValues[5].Value);
+            Tong_Y = Convert.ToInt32(itemValues[6].Value);
+            Tong_Z = Convert.ToInt32(itemValues[7].Value);
+            Coil_Weight = Convert.ToInt16(itemValues[8].Value);
+            Coil_ID_Search = Convert.ToString(itemValues[9].Value);
+            //try
+            //{ // Call Read API method
+            //    DAserver.Read(maxAge, ref itemIdentifiers, out itemValues);
+            //    // Handle results
+            //    for (int item = 0; item < 2; item++)
+            //    {
+            //        if (itemIdentifiers[item].ResultID.Succeeded)
+            //        {
+            //            Console.WriteLine("Value: {0} Quality: {1} Timestamp {2}",itemValues[item].Value,itemValues[item].Quality.Name,itemValues[item].TimeStamp);
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine("Read failed for item: {}",itemIdentifiers[item].ItemName);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Read exception. Reason: {0}", ex);
+            //}
+        }
+
+        void DAserver_DataChanged(int clientSubscription, bool allQualitiesGood, bool noErrors, ItemValueCallback[] itemValues)
+        {
+            foreach (ItemValueCallback itemValue in itemValues)
+            {
+                if (itemValue.ResultID.Succeeded)
+                {
+                    int itemIndex = (int)itemValue.ClientHandle;
+                    switch (itemIndex)
+                    {
+                        case 0:
+                            if (itemValue.Value == null)
+                            {
+
+                            }
+                            else
+                            {
+                                if (Convert.ToBoolean(itemValue.Value) == true)
+                                {
+                                    readData();
+                                    writeSql();
+                                    writeDataCheck();
+                                }
+                            }
+                            break;
+
+                        case 1: // Take
+                            if (itemValue.Value == null)
+                            {
+
+                            }
+                            else
+                            {
+                                if (Convert.ToBoolean(itemValue.Value) == true)
+                                {
+                                    readData();
+                                    readSqlTake();
+                                    writeData();
+                                    writeDataCheck();
+                                }
+                            }
+                            break;
+
+                        case 2: // Search
+                            if (itemValue.Value == null)
+                            {
+
+                            }
+                            else
+                            {
+                                if (Convert.ToBoolean(itemValue.Value) == true)
+                                {
+                                    readData();
+                                    readSqlSearch();
+                                    writeData();
+                                    writeDataCheck();
+                                }
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    //Console.WriteLine("Item error");          
+                }
+            }
+
+        }
+
+        private void Subscribe2Data()
+        {
+            // Define parameters for Subscribe method:
+            int itemIndex;
+            //initialize the client subscription handle
+            clientSubscriptionHandle = 1;
+            //Parameter to specify if the subscription will be added as active or not
+            bool active = false;
+            // The updateRate parameter is used to tell the server how fast we
+            // would like to see data updates.
+            int updateRate = 1000;
+            // The deadband parameter specifies the minimum deviation needed
+            // to be considered a change of value. 0 is disabled
+            Single deadBand = 0;
+            // The revisedUpdateRate parameter is the actual update rate that the
+            // server will be using.
+            int revisedUpdateRate;
+            //Initialize the item identifier values
+            itemIdentifiers[0] = new ItemIdentifier();
+            itemIdentifiers[0].ClientHandle = 0;
+            itemIdentifiers[0].DataType = Type.GetType("System.Boolean");
+            itemIdentifiers[0].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenonay2";
+            itemIdentifiers[1] = new ItemIdentifier();
+            itemIdentifiers[1].ClientHandle = 1;
+            itemIdentifiers[1].DataType = Type.GetType("System.Boolean");
+            itemIdentifiers[1].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenisemrial2";
+            itemIdentifiers[2] = new ItemIdentifier();
+            itemIdentifiers[2].ClientHandle = 2;
+            itemIdentifiers[2].DataType = Type.GetType("System.Boolean");
+            itemIdentifiers[2].ItemName = "VINCASITSTOK.VINC_PLC_STOK_SAHA.plcgidenara2";
+            try
+            {
+                DAserver.Subscribe(clientSubscriptionHandle, active, updateRate, out revisedUpdateRate, deadBand, ref itemIdentifiers, out activeServerSubscriptionHandle);
+                for (itemIndex = 0; itemIndex <= 2; itemIndex++)
+                {
+                    if (itemIdentifiers[itemIndex].ResultID.Succeeded == false)
+                    {
+                        //MessageBox.Show("Failed to add item " + itemIdentifiers[itemIndex].ItemName + " to subscription");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("Handled Subscribe exception. Reason: " + ex.Message);
+            }
+        }
+
+        private void ModifySubscription(bool action)
+
+        {
+            //Modify the Subscription to set it active
+            DAserver.SubscriptionModify(activeServerSubscriptionHandle, action);
+        }
+
+        protected override void OnStop()
+        {
+            //Disconnect from the server
+            if (DAserver.IsConnected)
+                DAserver.Disconnect();
+        }
+
+        public void DAserver_ServerStateChanged(int clientHandle, ServerState state)
+        {
+            object[] SSCevHndlrArray = new object[2];
+            SSCevHndlrArray[0] = clientHandle;
+            SSCevHndlrArray[1] = state;
+            //BeginInvoke(new DaServerMgt.ServerStateChangedEventHandler(ServerStateChanged), SSCevHndlrArray);
+        }
+
+        public void ServerStateChanged(int clientHandle, ServerState state)
+        {
+            try
+            {
+                //~~ Process the callback information here.
+                switch (state)
+                {
+                    case ServerState.ERRORSHUTDOWN:
+                        //Unsubscribe();
+                        //DisconnectOPCServer();
+                        //MessageBox.Show("The server is shutting down. The client has automatically disconnected.");
+                        break;
+
+                    case ServerState.ERRORWATCHDOG:
+                        //MessageBox.Show("Server connection has been lost. Client will keep attempting to reconnect.");
+                        break;
+                    case ServerState.CONNECTED:
+                        //MessageBox.Show("ServerStateChanged, connected");
+                        break;
+                    case ServerState.DISCONNECTED:
+                        //MessageBox.Show("ServerStateChanged, disconnected");
+                        break;
+                    default:
+                        //MessageBox.Show("ServerStateChanged, undefined state found.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("Handled Server State Changed exception. Reason: " + ex.Message);
+            }
+        }
+    }
+}
