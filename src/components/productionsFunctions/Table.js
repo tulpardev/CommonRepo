@@ -4,7 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import "../../../node_modules/react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import overlayFactory from 'react-bootstrap-table2-overlay';
-function Table({ data, page, sizePerPage, onTableChange, totalSize,loading,expandRow,keyField,columns}) {
+function Table({ data, page, sizePerPage, onTableChange, totalSize,loading,expandRow,keyField,columns,checkFilterScreen}) {
 
 
   const selectRow = {
@@ -21,6 +21,7 @@ function Table({ data, page, sizePerPage, onTableChange, totalSize,loading,expan
         data={data}
         columns={columns}
         pagination={paginationFactory({ page, sizePerPage, totalSize })}
+        
         onTableChange={onTableChange}
         loading={ loading }
         overlay={ overlayFactory({ spinner: true, styles: { overlay: (base) => ({...base, background: 'rgba(255, 0, 0, 0.5)'}) } }) }

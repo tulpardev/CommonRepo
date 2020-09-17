@@ -4,6 +4,7 @@ import "../../../node_modules/react-datepicker/dist/react-datepicker.css";
 import { Form, Navbar, Button, InputGroup, FormControl } from "react-bootstrap";
 import { useDispatch,useSelector} from "react-redux";
 import * as producedCoilActions from "../../redux/actions/producedCoilActions";
+import { history } from "../../utils/history";
 
 function FilterBar({ sideBarLink }) {
   const dispatch = useDispatch();
@@ -116,6 +117,7 @@ function FilterBar({ sideBarLink }) {
       NavbarBrand = "Line Stoppage Management";
     }
     console.log(filteredDataWithCheck);
+    history.push("/homepage/filter");
   }
 
   const formatTime = (date) => {

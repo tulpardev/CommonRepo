@@ -6,6 +6,7 @@ import ProducedCoilManagement from "../productionsFunctions/ProducedCoilManageme
 import LineStoppage from "../productionsFunctions/LineStoppage";
 import { Route, Switch, Router } from "react-router-dom";
 import { history } from "../../utils/history";
+import FilterScreen from "../HomePage/FilterScreen"
 const Main = () => {
   return (
     <main>
@@ -28,6 +29,7 @@ const Main = () => {
               component={ProducedCoilManagement}
             />
             <Route path={"/homepage/linestoppage"} component={LineStoppage} />
+            <Route path={"/homepage/filter"} component={FilterScreen} />
           </Switch>
         </Router>
       </div>

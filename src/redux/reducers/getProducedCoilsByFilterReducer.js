@@ -8,7 +8,6 @@ export default function getProducedCoilsByFilterReducer(
   switch (action.type) {
    
     case actionTypes.GET_PRODUCED_COIL_BY_FILTER:
-    console.log(action.payload)
       return action.payload
     default:
       return state;

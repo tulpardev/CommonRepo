@@ -3,35 +3,34 @@ import { useSelector, useDispatch } from "react-redux";
 import * as producedCoilActions from "../../redux/actions/producedCoilActions";
 import "../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import "../../../node_modules/react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
-import Table from "./Table";
+import Table from "../productionsFunctions/Table";
 import ModalsProducedCoil from "../productionsFunctions/ModalsProducedCoil";
+import { bool } from "prop-types";
 
-
-function ProducedCoilManagement() {
+function FilterScreen() {
   const dispatch = useDispatch();
   const producedCoils = useSelector((state) => state.producedCoilsForTableReducer);
-
+  const filteredData = useSelector((state) => state.getProducedCoilsByFilterReducer);
   const [state, setState] = useState({
     page: 1,
     loading: false,
     data: producedCoils,
     sizePerPage: 10,
   });
-
-  const checkFilterScreen = 0;
+  const checkFilterScreen = 1
   useEffect(() => {
-    dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
+    //dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
   }, []);
 
   const handleTableChange = (type, { page, sizePerPage }) => {
-    dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
-    setState(() => ({ data: producedCoils }));
+    //dispatch(producedCoilActions.getProducedCoils(sizePerPage, page - 1));
+    //setState(() => ({ data: producedCoils }));
   };
 
   const expandRow = {
     renderer: (row) => (
       <div>
-        {/* <ModalsProducedCoil idInput={row.msG_COUNTER} exCoilId={row.eX_COIL_ID} /> */}
+        <ModalsProducedCoil idInput={row.msG_COUNTER} exCoilId={row.eX_COIL_ID} />
       </div>
     ),
     showExpandColumn: true,
@@ -110,7 +109,7 @@ function ProducedCoilManagement() {
   const { sizePerPage, page, loading } = state;
   return (
     <Table
-      data={producedCoils}
+      data={filteredData}
       page={page}
       sizePerPage={sizePerPage}
       totalSize={producedCoils.length * 100}
@@ -119,8 +118,8 @@ function ProducedCoilManagement() {
       expandRow={expandRow}
       keyField="msG_COUNTER"
       columns = {columns}
-      checkFilterScreen={checkFilterScreen}
+      checkFilterScreen = {checkFilterScreen}
     />
   );
 }
-export default ProducedCoilManagement;
+export default FilterScreen;
